@@ -1,0 +1,9 @@
+/data/dutch/dutch_icd10/20241128 ICD-10-2021v3.1-C.xlsx
+/data/dutch/dutch_icd10/20241128 ICD-10-2021v3.1-C_readme.rtf
+/data/dutch/dutch_icd10/20241128 ICD-10-2021v3.1c-C.xml
+/bin/
+/include/
+/lib/
+/pyvenv.cfg
+.DS_Store
+.idea
