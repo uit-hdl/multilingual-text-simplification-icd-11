@@ -98,7 +98,7 @@ def main():
     # F20: code for Schizophrenia in ICD-10 we don't get sub codes,
     # because they significantly differ in content from ICD-11 (different types of schizophrenia described)
     # description of F20 in ICD-10 is relatively similar to 6A20 in ICD-11
-    icd_code = "F20"
+    icd_code_10 = "F20"
 
     # check if .xml file already exists
     xml_exists = any(
@@ -127,13 +127,13 @@ def main():
             dutch_icd10_filepath = os.path.join(dutch_folder, filename)
             break
 
-    logger.info(f"Extracting description for the code {icd_code}")
-    result_text = parse_xml_icd10(dutch_icd10_filepath, icd_code)
+    logger.info(f"Extracting description for the code {icd_code_10}")
+    result_text = parse_xml_icd10(dutch_icd10_filepath, icd_code_10)
 
     # we assume that ICD-11 has been extracted first and the file exists
     # replace F (ICD-10) to 6A (ICD-11)
-    icd_code = icd_code.replace('F', '6A')
-    results_path = f"../results/parallel_icd_texts_{icd_code}.tsv"
+    icd_code_11 = icd_code_10.replace('F', '6A')
+    results_path = f"../results/parallel_icd_texts_{icd_code_11}.tsv"
 
     # get link for the latest release
     with open(f'{dutch_folder}/release_url_link.txt', 'r') as f:
@@ -142,7 +142,7 @@ def main():
     # nl code stands for dutch
     logger.info(f"Writing extracted text to results file: {results_path}")
     with open(results_path, 'a') as f:
-        f.write(f"{icd10_url}\tnl\t{icd_code}\t{result_text}\n")
+        f.write(f"{icd10_url}\tnl\t{icd_code_10}\t{result_text}\n")
 
 
 if __name__ == '__main__':
