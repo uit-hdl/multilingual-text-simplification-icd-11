@@ -7,3 +7,5 @@
 /pyvenv.cfg
 .DS_Store
 .idea
+/share
+**/__pycache__/
