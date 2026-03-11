@@ -1,0 +1,4 @@
+https://huggingface.co/MaziyarPanahi/BioMistral-7B-SLERP-GGUF/tree/main
+
+Download and put in this folder:
+BioMistral-7B-SLERP.Q4_K_M.gguf

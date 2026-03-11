@@ -6,6 +6,7 @@ and readability metrics (mostly for English)
 from bert_score import score
 from rouge_score import rouge_scorer
 from lexicalrichness import LexicalRichness
+import statistics
 import sacrebleu
 import textstat
 import csv
@@ -201,4 +202,13 @@ def find_best_model(tsv_path: str) -> dict:
         "win_counts":     win_counts,
         "best_model":     best_model,
         "metric_winners": metric_winners,
+    }
+
+
+# check mean and std of metric (for the same model but several runs)
+def metric_stats(results, metric):
+    values = [row[metric] for row in results]
+    return {
+        "mean": statistics.mean(values),
+        "std": statistics.stdev(values)
     }
