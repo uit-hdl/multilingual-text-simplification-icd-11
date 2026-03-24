@@ -49,41 +49,10 @@ for i in range(10):
             simplified = match.group(1)
             print(simplified)
 
-            # words, unique_words, ttr, mtld, hdd
-            lex_richness_orig = get_lexical_richness(original)
-            lex_richness_simp = get_lexical_richness(simplified)
-
-            # standard metrics
-            bleu = get_bleu(original, simplified)
-            rouge = get_rouge(original, simplified)
-            bert_score = get_bert_score(original, simplified)
-
-            # readability metrics
-            lix = get_lix_score(simplified)
-            readability = get_readability_metrics(simplified)
-
             row = build_metrics_row(
                 model=model,
                 original=original,
-                simplified=simplified,
-                orig_word_count=lex_richness_orig['words'], orig_unique_words=lex_richness_orig['unique_words'],
-                orig_ttr=lex_richness_orig['ttr'], orig_mtld=lex_richness_orig['mtld'],
-                orig_hdd=lex_richness_orig['hdd'],
-                simp_word_count=lex_richness_simp['words'], simp_unique_words=lex_richness_simp['unique_words'],
-                simp_ttr=lex_richness_simp['ttr'], simp_mtld=lex_richness_simp['mtld'],
-                simp_hdd=lex_richness_simp['hdd'],
-                bleu=bleu['bleu'],
-                rouge1_f1=rouge['rouge1']['f1'],
-                rougel_f1=rouge['rougeL']['f1'],
-                bert=bert_score,
-                lix=lix,
-                flesch_reading_ease=readability['flesch_reading_ease'],
-                flesch_kincaid_grade=readability['flesch_kincaid_grade'],
-                smog_index=readability['smog_index'],
-                gunning_fog=readability['gunning_fog'],
-                coleman_liau_index=readability['coleman_liau_index'],
-                automated_readability_index=readability['automated_readability_index'],
-                dale_chall_readability_score=readability['dale_chall_readability_score'],
+                simplified=simplified
             )
 
             results.append(row)
@@ -92,9 +61,3 @@ for i in range(10):
             print(content)
 
 write_results_tsv(results, results_path)
-
-# check important stats
-print("BLEU:", metric_stats(results, "bleu"))
-print("ROUGE 1:", metric_stats(results, "rouge1_f1"))
-print("ROUGE L:", metric_stats(results, "rougeL_f1"))
-print("BERT:", metric_stats(results, "bert"))

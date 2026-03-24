@@ -93,3 +93,14 @@ with open('results/prism_test_output.txt', 'r') as f:
 
 print(f'original: {original}')
 print(f'simplified: {simplified}')
+
+results = []
+results_path = "results/prism_model_results.tsv"
+
+row = build_metrics_row(
+                model="prism",
+                original=original,
+                simplified=simplified
+            )
+results.append(row)
+write_results_tsv(results, results_path)

@@ -9,6 +9,6 @@
 .idea
 /share
 **/__pycache__/
-/fairseq_env
 notes.txt
 test.tgt
+/fairseq_env/
