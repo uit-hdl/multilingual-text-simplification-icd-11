@@ -12,3 +12,5 @@
 notes.txt
 test.tgt
 /fairseq_env/
+/plots/
+/prism_preprocessed/

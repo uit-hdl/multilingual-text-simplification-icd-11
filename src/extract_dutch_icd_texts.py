@@ -77,7 +77,15 @@ def parse_xml_icd10(filepath, icd_code):
         # get the definition when found the needed ICD code
         if code == icd_code:
             for rubric in found_class.findall(".//Rubric"):
+
                 kind = rubric.get("kind")
+
+                if kind == 'preferred':
+                    text = ElementTree.tostring(rubric, encoding="unicode")
+                    without_tags = re.sub(r"<[^>]+>", "", text)
+                    clean_text = "\n".join(line.strip() for line in without_tags.splitlines() if line.strip())
+                    result += clean_text + ': '
+
                 if kind == "description":
                     text = ElementTree.tostring(rubric, encoding="unicode")
 
@@ -86,6 +94,7 @@ def parse_xml_icd10(filepath, icd_code):
                     clean_text = "\n".join(line.strip() for line in without_tags.splitlines() if line.strip())
                     result += clean_text + ' '
 
+    print(result)
     return result
 
 
@@ -98,7 +107,10 @@ def main():
     # F20: code for Schizophrenia in ICD-10 we don't get sub codes,
     # because they significantly differ in content from ICD-11 (different types of schizophrenia described)
     # description of F20 in ICD-10 is relatively similar to 6A20 in ICD-11
-    icd_code_10 = "F20"
+
+    icd_code_10 = "F22"
+
+    icd_code_11 = '6A24'
 
     # check if .xml file already exists
     xml_exists = any(
@@ -132,8 +144,11 @@ def main():
 
     # we assume that ICD-11 has been extracted first and the file exists
     # replace F (ICD-10) to 6A (ICD-11)
-    icd_code_11 = icd_code_10.replace('F', '6A')
-    results_path = f"../results/parallel_icd_texts_{icd_code_11}.tsv"
+    # note: this is not always applicable, the codes can be different
+
+    # icd_code_11 = icd_code_10.replace('F', '6A')
+
+    results_path = f"../results/{icd_code_11}/parallel_icd_texts_{icd_code_11}.tsv"
 
     # get link for the latest release
     with open(f'{dutch_folder}/release_url_link.txt', 'r') as f:

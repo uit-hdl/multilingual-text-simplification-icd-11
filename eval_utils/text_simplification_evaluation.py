@@ -11,22 +11,6 @@ import sacrebleu
 import textstat
 import csv
 
-HIGHER_IS_BETTER = {
-    "flesch_reading_ease", "bleu", "bert",
-    "rouge1_f1", "rougeL_f1"
-}
-
-LOWER_IS_BETTER = {
-    "flesch_kincaid_grade", "smog_index", "gunning_fog", "coleman_liau_index",
-    "automated_readability_index", "dale_chall_readability_score", "lix"
-}
-
-SKIP = {"original_text", "simplified_text", "model",
-        "orig_word_count", "orig_unique_words",
-        "orig_ttr", "orig_mltd", "orig_hdd",
-        "simp_word_count", "simp_unique_words",
-        "simp_ttr", "simp_mltd", "simp_hdd"}
-
 
 # get the ICD text based on filters (language, ICD code)
 def get_text(tsv_path: str, filter1: tuple, filter2: tuple, output_col: str) -> str:
@@ -47,6 +31,7 @@ def get_lexical_richness(simplified: str) -> dict:
         "words":       lex.words,           # total word count
         "unique_words": lex.terms,          # unique word count
         "ttr":         round(lex.ttr, 4),   # Type-Token Ratio (unique/total); lower = better
+        "mattr": lex.mattr(window_size=min(50, lex.words)),  # because we are using short texts, we set a smaller window
         "mtld":        round(lex.mtld(threshold=0.72), 4),  # robust TTR alternative; lower = better
         # "hdd":         round(lex.hdd(draws=42), 4),         # HD-D diversity index; lower = better
     }
@@ -96,7 +81,8 @@ def get_rix_score(simplified_text):  # Lower = better
 
 
 # readability metrics for English
-def get_readability_metrics(simplified: str) -> dict:
+def get_readability_metrics(simplified: str, lang='en') -> dict:
+    textstat.set_lang(lang)
     return {
         "flesch_reading_ease":        textstat.flesch_reading_ease(simplified),        # Higher = better
         "flesch_kincaid_grade":       textstat.flesch_kincaid_grade(simplified),       # Lower = better

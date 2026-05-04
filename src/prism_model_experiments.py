@@ -41,31 +41,35 @@ sys.path.append("/Users/olga/pycharm/multilingual_chatbot_trusting/eval_utils")
 from text_simplification_evaluation import *
 import sentencepiece as spm
 
-lang = 'en'
+lang = 'fr'
+icd_code = '6A20'
 
 sp = spm.SentencePieceProcessor()
 sp.Load('models/prism/spm.model')
 
 # original = '''Schizophrenia is characterised by disturbances in multiple mental modalities, including thinking (e.g., delusions, disorganisation in the form of thought), perception (e.g., hallucinations), self-experience (e.g., the experience that one's feelings, impulses, thoughts, or behaviour are under the control of an external force), cognition (e.g., impaired attention, verbal memory, and social cognition), volition (e.g., loss of motivation), affect (e.g., blunted emotional expression), and behaviour (e.g., behaviour that appears bizarre or purposeless, unpredictable or inappropriate emotional responses that interfere with the organisation of behaviour).'''
 
-icd_texts_paths = 'results/parallel_icd_texts_6A20.tsv'
+original = '''La schizophrénie est une maladie.'''
 
-original = get_text(icd_texts_paths,
-                  ("language", "en"),
-                  ("code", "6A20"),
-                  output_col="original_text") + ' ' +\
-           get_text(icd_texts_paths,
-                  ("language", "en"),
-                  ("code", "6A20.0"),
-                  output_col="original_text") + ' ' +\
-           get_text(icd_texts_paths,
-                  ("language", "en"),
-                  ("code", "6A20.1"),
-                  output_col="original_text") + ' ' +\
-           get_text(icd_texts_paths,
-                  ("language", "en"),
-                  ("code", "6A20.2"),
-                  output_col="original_text")
+icd_texts_paths = f'results/parallel_icd_texts/parallel_icd_texts_{icd_code}.tsv'
+
+# original = get_text(icd_texts_paths,
+#                   ("language", lang),
+#                   ("code", f"{icd_code}"),
+#                   output_col="original_text") + ' ' +\
+#            get_text(icd_texts_paths,
+#                   ("language", lang),
+#                   ("code", f"{icd_code}.0"),
+#                   output_col="original_text") + ' ' +\
+#            get_text(icd_texts_paths,
+#                   ("language", lang),
+#                   ("code", f"{icd_code}.1"),
+#                   output_col="original_text") \
+#            + ' ' +\
+#            get_text(icd_texts_paths,
+#                   ("language", lang),
+#                   ("code", f"{icd_code}.2"),
+#                   output_col="original_text")
 
 sents = [original]
 sp_sents = [' '.join(sp.EncodeAsPieces(sent)) for sent in sents]
@@ -80,11 +84,11 @@ if os.path.exists('data/prism_preprocessed'):
     os.makedirs('data/prism_preprocessed')
 
 # run preprocessing and paraphrasing
-subprocess.run(["bash", "src/run_prism_paraphrasing.sh"])
+subprocess.run(["bash", "src/run_prism_paraphrasing.sh", str(lang)])
 
 # check the result
 simplified = ''
-with open('results/prism_test_output.txt', 'r') as f:
+with open(f'results/{lang}/{icd_code}/prism_test_output.txt', 'r') as f:
     text = f.readlines()
     for line in text:
         if line.startswith('H-'):
@@ -94,8 +98,10 @@ with open('results/prism_test_output.txt', 'r') as f:
 print(f'original: {original}')
 print(f'simplified: {simplified}')
 
+simplified = simplified.replace('"', '')
+
 results = []
-results_path = "results/prism_model_results.tsv"
+results_path = f"results/{lang}/{icd_code}/prism_model_results.tsv"
 
 row = build_metrics_row(
                 model="prism",

@@ -1,0 +1,10 @@
+ Rewrite this medical definition for a layman person.
+Keep it as close to the original meaning as possible, just use simpler words and syntactic constructions.
+
+medical definition:
+Schizotypal disorder is characterised by an enduring pattern (i.e. characteristic of the person’s functioning over a period of at least several years) of eccentricities in behaviour, appearance and speech, accompanied by cognitive and perceptual distortions, unusual beliefs, and discomfort with— and often reduced capacity for— interpersonal relationships. Symptoms may include constricted or inappropriate affect and anhedonia. Paranoid ideas, ideas of reference, or other psychotic symptoms, including hallucinations in any modality, may occur, but are not of sufficient intensity or duration to meet the diagnostic requirements of schizophrenia, schizoaffective disorder, or delusional disorder. The symptoms cause distress or impairment in personal, family, social, educational, occupational or other important areas of functioning.
+
+simplified text:
+Schizotypal disorder is a condition that lasts for a long time (at least several years) and is characterized by unusual behaviour, appearance, speech, thoughts, and beliefs. People with schizotypal disorder often feel uncomfortable with other people and have a hard time relating to them. They may also have trouble expressing their feelings and may lack pleasure in life. While some people with schizotypal disorder may experience paranoid thoughts, ideas of reference, or hallucinations, these symptoms are not severe enough to be classified as schizophrenia, schizoaffective disorder, or delusional disorder. These symptoms must cause distress or impairment in important areas of a person’s life, such as work, school, relationships, or daily activities. [end of text]
+
+

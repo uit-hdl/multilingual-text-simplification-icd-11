@@ -113,16 +113,19 @@ def main():
     languages = ['en', 'fr', 'cs', 'tr', 'de']
 
     # 6A20: code for Schizophrenia
-    icd_code = "6A20"
+    # 6A20-6A25: primary psychotic disorders
+    icd_code = "6A25"
 
     # rows to write to a dataframe
     rows = []
 
     # open a csv file
-    results_path = f"results/parallel_icd_texts_{icd_code}.tsv"
-    if not os.path.exists(results_path):
-        f = open(results_path, "w")
-        f.write('release_url\tlanguage\tcode\toriginal_text\n')
+    parent = os.path.dirname(os.getcwd())
+    folderpath = os.path.join(parent, f"results/{icd_code}")
+    if not os.path.exists(folderpath):
+        os.mkdir(folderpath)
+
+    results_path = os.path.join(folderpath, f"parallel_icd_texts_{icd_code}.tsv")
 
     for language in languages:
         logger.info(f"Loading texts in language: {language}")

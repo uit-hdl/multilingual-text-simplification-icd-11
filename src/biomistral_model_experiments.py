@@ -7,25 +7,29 @@ from eval_utils.text_simplification_evaluation import *
 import subprocess
 import re
 
+icd_code = '6A24'
+lang = 'fr'
+language = 'French'
+
 # open ICD text
-icd_texts_paths = '../results/parallel_icd_texts_6A20.tsv'
+icd_texts_paths = f'../results/parallel_icd_texts/parallel_icd_texts_{icd_code}.tsv'
 biomistral_model = 'BioMistral-7B-SLERP.Q4_K_M.gguf'
 
 original = get_text(icd_texts_paths,
-                  ("language", "en"),
-                  ("code", "6A20"),
+                  ("language", lang),
+                  ("code", f"{icd_code}"),
                   output_col="original_text") + ' ' +\
            get_text(icd_texts_paths,
-                  ("language", "en"),
-                  ("code", "6A20.0"),
+                  ("language", lang),
+                  ("code", f"{icd_code}.0"),
                   output_col="original_text") + ' ' +\
            get_text(icd_texts_paths,
-                  ("language", "en"),
-                  ("code", "6A20.1"),
+                  ("language", lang),
+                  ("code", f"{icd_code}.1"),
                   output_col="original_text") + ' ' +\
            get_text(icd_texts_paths,
-                  ("language", "en"),
-                  ("code", "6A20.2"),
+                  ("language", lang),
+                  ("code", f"{icd_code}.2"),
                   output_col="original_text")
 
 # run the model using llama.cpp with the extracted ICD text
@@ -33,20 +37,24 @@ original = get_text(icd_texts_paths,
 # temperature was set by default to 0.8
 
 results = []
-results_path = '../results/biomistral_model_results.tsv'
+results_path = f'../results/{lang}/{icd_code}/biomistral_model_results.tsv'
 
 for i in range(10):
-    subprocess.run(["bash", "run_biomistral_llama_cpp.sh", str(original), str(i)])
+    subprocess.run(["bash", "run_biomistral_llama_cpp.sh",
+                    str(original), str(i), str(icd_code), str(lang), language])
 
     # open result file with the output
-    with open("../results/biomistral_output.txt", "r") as f:
+    with open(f"../results/{lang}/{icd_code}/biomistral_output.txt", "r") as f:
         content = f.read()
-        match = re.search(r"simplified text:\s*(.*?)(?:\s*\[end of text\]|$)", content, re.DOTALL)
+        # match = re.search(r"simplified text:[\r\n]*([^\r\n]+)[\r\n]*", content, re.DOTALL)
+        # match = re.search(r"Vereinfachter Text:[\r\n]*([^\r\n]+)[\r\n]*", content, re.DOTALL)
+        match = re.search(r"Texte simplifié :[\r\n]*([^\r\n]+)[\r\n]*", content, re.DOTALL)
         if match:
             model = f"run_{i}_" + biomistral_model
             print(model)
 
             simplified = match.group(1)
+            simplified = simplified.replace(' [end of text]', '')
             print(simplified)
 
             row = build_metrics_row(

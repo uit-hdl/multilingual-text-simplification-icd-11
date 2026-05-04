@@ -5,22 +5,12 @@ import pandas as pd
 from eval_utils.text_simplification_evaluation import *
 
 
-def build_metrics_table(list_of_value_lists, models):
+def build_metrics_table(list_of_value_lists, models, metric_names):
     """
     list_of_value_lists: list of lists
     Each inner list = one model's values
     """
     n_rows = len(list_of_value_lists[0])
-
-    metric_names = ['diff_tokens', 'diff_types']
-
-    # metric_names = ['bleu', 'rouge1', 'rougeL', 'bertscore']
-
-    # metric_names = ['diff_ttr', 'diff_mtld', 'diff_lix', 'diff_rix',
-    #                 'diff_flesch_reading_ease', 'diff_flesch_kincaid_grade',
-    #                 'diff_smog_index', 'diff_gunning_fog',
-    #                 'diff_coleman_liau_index', 'diff_automated_readability_index',
-    #                 'diff_dale_chall_readability_score']
 
     df = pd.DataFrame({
         "metric": metric_names
@@ -32,7 +22,7 @@ def build_metrics_table(list_of_value_lists, models):
     return df
 
 
-def save_with_coloring(df, output_file="../results/colored_metrics_tokens_types.xlsx"):
+def save_with_coloring(df, output_file):
     with pd.ExcelWriter(output_file, engine="xlsxwriter") as writer:
         df.to_excel(writer, index=False, sheet_name="Sheet1")
 
@@ -60,13 +50,33 @@ def save_with_coloring(df, output_file="../results/colored_metrics_tokens_types.
             })
 
 
-models = ['lingconv', 'prism', 'ascle', 'biomistral']
+icd_code = "6A24"
+lang = "fr"
+# type_of_metrics = 'similarity'
+type_of_metrics = 'tokens_types'
+# type_of_metrics = 'complexity'
+
+metric_names = ['diff_tokens', 'diff_types']
+# metric_names = ['bleu', 'rouge1', 'rougeL', 'bertscore']
+# metric_names = ['diff_ttr', 'diff_mattr', 'diff_mtld',
+#                 'diff_lix', 'diff_rix',
+#                 'diff_flesch_reading_ease', 'diff_flesch_kincaid_grade',
+#                 'diff_smog_index', 'diff_gunning_fog',
+#                 'diff_coleman_liau_index', 'diff_automated_readability_index',
+#                 'diff_dale_chall_readability_score']
+
+# metric_names = ['diff_ttr', 'diff_mattr', 'diff_mtld',
+#                 'diff_lix', 'diff_rix',
+#                 'diff_flesch_reading_ease']
+
+# models = ['lingconv', 'prism', 'ascle', 'biomistral']
+models = ['biomistral']
 
 all_results = []
 all_models = []
 
 for model in models:
-    filepath = f"../results/{model}_model_results.tsv"
+    filepath = f"../results/{lang}/{icd_code}/{model}_model_results.tsv"
     data = read_tsv_3cols(filepath)
 
     for line in data[1:]:
@@ -91,6 +101,7 @@ for model in models:
         diff_types = complexity_original['unique_words'] - complexity_simplified['unique_words']
 
         diff_ttr = complexity_original['ttr'] - complexity_simplified['ttr']
+        diff_mattr = complexity_original['mattr'] - complexity_simplified['mattr']
         diff_mtld = complexity_original['mtld'] - complexity_simplified['mtld']
         # print(complexity_original['hdd'] - complexity_simplified['hdd'])
 
@@ -98,11 +109,11 @@ for model in models:
         diff_lix = get_lix_score(original) - get_lix_score(simplified)
         diff_rix = get_rix_score(original) - get_rix_score(simplified)
 
-        orig_readability = get_readability_metrics(original)
-        simpl_readability = get_readability_metrics(simplified)
+        orig_readability = get_readability_metrics(original, lang)
+        simpl_readability = get_readability_metrics(simplified, lang)
 
         # drop in readability (English only)
-        diff_flesch_reading_ease = simpl_readability['flesch_reading_ease'] - orig_readability['flesch_reading_ease']
+        diff_flesch_reading_ease = orig_readability['flesch_reading_ease'] - simpl_readability['flesch_reading_ease']
 
         diff_flesch_kincaid_grade = orig_readability['flesch_kincaid_grade'] - simpl_readability['flesch_kincaid_grade']
         diff_smog_index = orig_readability['smog_index'] - simpl_readability['smog_index']
@@ -113,11 +124,14 @@ for model in models:
         diff_dale_chall_readability_score = orig_readability['dale_chall_readability_score'] - simpl_readability[
             'dale_chall_readability_score']
 
-        # values = [diff_ttr, diff_mtld, diff_lix, diff_rix,
+        # values = [diff_ttr, diff_mattr, diff_mtld, diff_lix, diff_rix,
         #           diff_flesch_reading_ease, diff_flesch_kincaid_grade,
         #           diff_smog_index, diff_gunning_fog,
         #           diff_coleman_liau_index, diff_automated_readability_index,
         #           diff_dale_chall_readability_score]
+
+        # values = [diff_ttr, diff_mattr, diff_mtld, diff_lix, diff_rix,
+        #           diff_flesch_reading_ease]
 
         # values = [bleu, rouge1, rougel, bertscore]
 
@@ -125,5 +139,6 @@ for model in models:
 
         all_results.append(values)
 
-df = build_metrics_table(all_results, all_models)
-save_with_coloring(df)
+
+df = build_metrics_table(all_results, all_models, metric_names)
+save_with_coloring(df, f"../results/{lang}/{icd_code}/colored_metrics_{type_of_metrics}.xlsx")
