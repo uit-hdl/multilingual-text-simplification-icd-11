@@ -1,14 +1,13 @@
-#install.packages(c("readxl", "tidyr", "ggplot2", "wesanderson"))  # run once
+#install.packages(c("readxl", "tidyr", "ggplot2", "patchwork", "glue"))  # run once
 library(readxl)
 library(tidyr)
 library(ggplot2)
-library(wesanderson)
 library(patchwork)
 library(glue)
 
 
 make_heatmap <- function(lang, icd_code, plot_title, typeofmetrics, metric) {
-  filepath <- glue("pycharm/multilingual_chatbot_trusting/results/{lang}/{icd_code}/colored_metrics_{typeofmetrics}.xlsx")
+  filepath <- glue("results/{lang}/{icd_code}/colored_metrics_{typeofmetrics}.xlsx")
   df <- read_excel(filepath)
   df <- as.data.frame(df)
   metric_names <- df[[1]]
