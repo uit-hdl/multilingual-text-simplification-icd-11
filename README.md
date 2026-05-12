@@ -1,28 +1,21 @@
-Text simplification / paraphrasing of ICD-11 texts for creating a parallel multilingual knowledge base on mental health
+# Evaluation of Multilingual Text Simplification for the Mental Health Domain: Exploring Small Language Models
 
-### Pipeline:
+Repository for the paper:
 
-1) ```src/extract_icd_texts.py```: browses through 
-ICD API, finds the latest release of ICD-11 
-linearizations, extracts the definitions for 
-the chosen ICD code (e.g. 6A20 for Schizophrenia) 
-and for the chosen list of languages (here: English, 
-French, Czech, Turkish, German pre-released), 
-stores the results in a TSV file 
-in ```results/parallel_icd_texts_{icd_code}.tsv```
+Olga Pelloni, Sandra Anna Just, Lars Ailo Bongo (2026). Evaluation of Multilingual Text Simplification for the Mental Health Domain: Exploring Small Language Models, BioNLP 2026.
 
-**Note**: For running this code, one needs to get ICD
- API access [here](https://icd.who.int/icdapi)
 
-2) ```src/extract_dutch_icd_texts.py```: opens the page
- of the ICD related files by *"WHO Collaborating 
- Centre for the Family of International Classifications
-  (FIC) in the Netherlands"*, finds the latest release
-   of the available XML file of ICD-10, downloads it, 
-   parses and finds a definition for the given 
-   code (F20 for Schizophrenia), and appends the 
-   extracted results to the 
-   results file
-    ```results/parallel_icd_texts_{icd_code}.tsv```.
-    The link to the found ZIP file is stored in 
-    ```data/dutch/dutch_icd10```
+## Data
+
+Data comes from the [ICD-11 definitions](https://icd.who.int/browse/2025-01/mms/en#1683919430). We extracted the definitions using [ICD API](https://icd.who.int/icdapi) in English, German and French.
+
+
+## Scripts
+
+We tested our scripts using Python 3.8.18 and pip 25.0.1. PRISM model requires a fairseq package, for which one needs a separate environment with pip 23.0.1. Install required packages using ```fairseq_env_requirements.txt``` for the PRISM model and ```requirements.txt``` for the other models.
+
+## Models
+
+1. [PRISM](https://github.com/thompsonb/prism/tree/master/paraphrase_generation)
+2. [Ascle models](https://github.com/Yale-LILY/Ascle)
+3. [BioMistral 7B](https://huggingface.co/MaziyarPanahi/BioMistral-7B-SLERP-GGUF/tree/main) (using [llama.cpp](https://llama-cpp.com/))
