@@ -7,7 +7,7 @@ library(glue)
 
 
 make_heatmap <- function(lang, icd_code, plot_title, typeofmetrics, metric) {
-  filepath <- glue("results/{lang}/{icd_code}/colored_metrics_{typeofmetrics}.xlsx")
+  filepath <- glue("/results/{lang}/{icd_code}/colored_metrics_{typeofmetrics}.xlsx")
   df <- read_excel(filepath)
   df <- as.data.frame(df)
   metric_names <- df[[1]]
@@ -17,13 +17,13 @@ make_heatmap <- function(lang, icd_code, plot_title, typeofmetrics, metric) {
   df_t <- as.data.frame(t(df))
   df_t <- df_t[complete.cases(df_t), ]
   df_t$model <- c(
-    'lingconv', 'prism',
-                  'ascle-bigbird-pegasus-1',
-                  'ascle-bigbird-pegasus-2',
-                  'ascle-biobart-1',
-                  'ascle-biobart-2',
-                  'ascle-bart-1',
-                  'ascle-bart-2',
+    # 'lingconv', 'prism',
+    #               'ascle-bigbird-pegasus-1',
+    #               'ascle-bigbird-pegasus-2',
+    #               'ascle-biobart-1',
+    #               'ascle-biobart-2',
+    #               'ascle-bart-1',
+    #               'ascle-bart-2',
                   'biomistral-run0',
                   'biomistral-run1',
                   'biomistral-run2',
@@ -51,7 +51,7 @@ make_heatmap <- function(lang, icd_code, plot_title, typeofmetrics, metric) {
   
   p <- ggplot(df_long, aes(x = metric, y = model, fill = value)) +
     geom_tile(color = "white") +
-    # geom_text(aes(label = round(value, 2))) +
+    geom_text(aes(label = round(value, 2))) +
     scale_fill_gradient(low = "firebrick1", high = "chartreuse1", name = "original -\n simplified") +
     scale_y_discrete(limits = rev(df_t$model)) +
     theme_minimal() +
@@ -64,15 +64,32 @@ make_heatmap <- function(lang, icd_code, plot_title, typeofmetrics, metric) {
     ylab("") +
     ggtitle(plot_title) +
     
-    scale_x_discrete(labels = c(
-      "diff_flesch_reading_ease" = "diff_fre",
-      "diff_flesch_kincaid_grade" = "diff_fkgl",
-      "diff_smog_index" = "diff_smog",
-      "diff_gunning_fog" = "diff_fog",
-      "diff_coleman_liau_index" = "diff_cli",
-      "diff_automated_readability_index" = "diff_ari",
-      "diff_dale_chall_readability_score" = "diff_dcr"
-    ))
+    # scale_x_discrete(labels = c(
+    #   "diff_flesch_reading_ease" = "diff_fre",
+    #   "diff_flesch_kincaid_grade" = "diff_fkgl",
+    #   "diff_smog_index" = "diff_smog",
+    #   "diff_gunning_fog" = "diff_fog",
+    #   "diff_coleman_liau_index" = "diff_cli",
+    #   "diff_automated_readability_index" = "diff_ari",
+    #   "diff_dale_chall_readability_score" = "diff_dcr"
+    # ))
+  
+  scale_x_discrete(labels = c(
+    "diff_flesch_reading_ease" = "fre",
+    "diff_flesch_kincaid_grade" = "fkgl",
+    "diff_smog_index" = "smog",
+    "diff_gunning_fog" = "fog",
+    "diff_coleman_liau_index" = "cli",
+    "diff_automated_readability_index" = "ari",
+    "diff_dale_chall_readability_score" = "dcr",
+    "diff_ttr" = "ttr",
+    "diff_mattr" = "mattr",
+    "diff_mtld" = "mtld",
+    "diff_lix" = "lix",
+    "diff_rix" = "rix",
+    "diff_tokens" = "tokens",
+    "diff_types" = "types"
+  ))  
     
   return(p)
 }
@@ -80,11 +97,11 @@ make_heatmap <- function(lang, icd_code, plot_title, typeofmetrics, metric) {
 metrics <- c('diff_ttr', 'diff_mattr', 'diff_mtld',
              'diff_lix', 'diff_rix', 'diff_flesch_reading_ease')
 
-metrics <- c('')
+metrics <- c("diff_tokens", "diff_types")
 
 lang <- 'en'
 
-metric_type <- 'complexity'
+metric_type <- 'tokens_types'
 
 p1 <- make_heatmap(lang, "6A20", "6A20, en", metric_type, metrics) +
   theme(
@@ -121,7 +138,7 @@ p6 <- make_heatmap(lang, "6A20", "6A20, de", metric_type, metrics) +
   theme(
     legend.position = "none",
     plot.margin = margin(2, 0, 2, 2))
-p6
+
 p7 <- make_heatmap(lang, "6A21", "6A21, de", metric_type, metrics) +
   theme(
     legend.position = "none",
@@ -191,19 +208,18 @@ combined <-# Combine horizontally with smaller spacing
   plot_layout(guides = "collect",
               heights = c(4, 2, 2))
 
-
-combined <-# Combine horizontally with smaller spacing
-  (p1 | p2) /
-  (p6 | p7) /
-  (p11 | p12) +
-  plot_layout(guides = "collect",
-              heights = c(4, 2, 2))
-
-
-combined <-# Combine horizontally with smaller spacing
-  (p1 | p2 | p3 | p4 | p5) +
-  plot_layout(guides = "collect")
-
 combined
+
+#combined <-# Combine horizontally with smaller spacing
+#  (p1 | p2) /
+#  (p6 | p7) /
+#  (p11 | p12) +
+#  plot_layout(guides = "collect",
+#              heights = c(4, 2, 2))
+#
+#
+#combined <-# Combine horizontally with smaller spacing
+#  (p1 | p2 | p3 | p4 | p5) +
+#  plot_layout(guides = "collect")
 
 

@@ -7,7 +7,7 @@ from eval_utils.text_simplification_evaluation import *
 import subprocess
 import re
 
-icd_code = '6A24'
+icd_code = '6A20'
 lang = 'fr'
 language = 'French'
 
@@ -33,8 +33,8 @@ original = get_text(icd_texts_paths,
                   output_col="original_text")
 
 # run the model using llama.cpp with the extracted ICD text
-# let's run this about 10 times, to see how the evaluation metrics change
-# temperature was set by default to 0.8
+# we run this about 10 times, to see how the evaluation metrics change
+# temperature was set by default to 0.8, we change it to 0.3
 
 results = []
 results_path = f'../results/{lang}/{icd_code}/biomistral_model_results.tsv'

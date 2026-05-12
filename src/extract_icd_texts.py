@@ -108,13 +108,13 @@ def main():
     logger = logging.getLogger(__name__)
     logging.basicConfig(level=logging.INFO)
 
-    # list of needed and available languages:
-    # English, French, Czech, Turkish, German
-    languages = ['en', 'fr', 'cs', 'tr', 'de']
+    # list of needed languages:
+    # English, French, German
+    languages = ['en', 'fr', 'de']
 
     # 6A20: code for Schizophrenia
     # 6A20-6A25: primary psychotic disorders
-    icd_code = "6A25"
+    icd_code = "6A20"
 
     # rows to write to a dataframe
     rows = []

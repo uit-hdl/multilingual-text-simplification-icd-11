@@ -50,7 +50,7 @@ def save_with_coloring(df, output_file):
             })
 
 
-icd_code = "6A24"
+icd_code = "6A20"
 lang = "fr"
 # type_of_metrics = 'similarity'
 type_of_metrics = 'tokens_types'
@@ -103,18 +103,17 @@ for model in models:
         diff_ttr = complexity_original['ttr'] - complexity_simplified['ttr']
         diff_mattr = complexity_original['mattr'] - complexity_simplified['mattr']
         diff_mtld = complexity_original['mtld'] - complexity_simplified['mtld']
-        # print(complexity_original['hdd'] - complexity_simplified['hdd'])
 
-        # drop in readability (multilingual)
+        # drop in readability
         diff_lix = get_lix_score(original) - get_lix_score(simplified)
         diff_rix = get_rix_score(original) - get_rix_score(simplified)
 
         orig_readability = get_readability_metrics(original, lang)
         simpl_readability = get_readability_metrics(simplified, lang)
 
-        # drop in readability (English only)
         diff_flesch_reading_ease = orig_readability['flesch_reading_ease'] - simpl_readability['flesch_reading_ease']
 
+        # for English only
         diff_flesch_kincaid_grade = orig_readability['flesch_kincaid_grade'] - simpl_readability['flesch_kincaid_grade']
         diff_smog_index = orig_readability['smog_index'] - simpl_readability['smog_index']
         diff_gunning_fog = orig_readability['gunning_fog'] - simpl_readability['gunning_fog']

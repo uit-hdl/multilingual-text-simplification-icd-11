@@ -33,24 +33,24 @@ ascle_models = ["li-lab/ascle-bigbird-pegasus-large-pubmed-elife-finetuned",
 # open ICD text
 icd_texts_paths = f'../results/parallel_icd_texts/parallel_icd_texts_{icd_code}.tsv'
 
-original = 'La schizophrénie se caractérise par des perturbations de multiples modalités'
+# original = 'La schizophrénie se caractérise par des perturbations de multiples modalités'
 
-# original = get_text(icd_texts_paths,
-#                   ("language", lang),
-#                   ("code", f"{icd_code}"),
-#                   output_col="original_text") + ' ' +\
-#            get_text(icd_texts_paths,
-#                   ("language", lang),
-#                   ("code", f"{icd_code}.0"),
-#                   output_col="original_text") + ' ' +\
-#            get_text(icd_texts_paths,
-#                   ("language", lang),
-#                   ("code", f"{icd_code}.1"),
-#                   output_col="original_text") + ' ' +\
-#            get_text(icd_texts_paths,
-#                   ("language", lang),
-#                   ("code", f"{icd_code}.2"),
-#                   output_col="original_text")
+original = get_text(icd_texts_paths,
+                  ("language", lang),
+                  ("code", f"{icd_code}"),
+                  output_col="original_text") + ' ' +\
+           get_text(icd_texts_paths,
+                  ("language", lang),
+                  ("code", f"{icd_code}.0"),
+                  output_col="original_text") + ' ' +\
+           get_text(icd_texts_paths,
+                  ("language", lang),
+                  ("code", f"{icd_code}.1"),
+                  output_col="original_text") + ' ' +\
+           get_text(icd_texts_paths,
+                  ("language", lang),
+                  ("code", f"{icd_code}.2"),
+                  output_col="original_text")
 
 results = []
 results_path = f'../results/{lang}/{icd_code}/ascle_model_results.tsv'

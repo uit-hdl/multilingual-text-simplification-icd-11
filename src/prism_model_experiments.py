@@ -36,7 +36,7 @@ import sys
 import shutil
 import subprocess
 
-sys.path.append("/Users/olga/pycharm/multilingual_chatbot_trusting/eval_utils")
+sys.path.append("/eval_utils")
 
 from text_simplification_evaluation import *
 import sentencepiece as spm
