@@ -68,7 +68,6 @@ def find_texts_by_icd_code(headers, latest_release_url, icd_code):
 
 
 # access ICD API and get a definition in a chosen language
-# available TRUSTING languages: en, fr, cs, tr, de
 # to access ICD API: register at https://icd.who.int/icdapi
 def get_icd_text(lang="en", icd_code="6A20"):
     token_resp = requests.post(
